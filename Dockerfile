@@ -9,10 +9,10 @@ COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 # Copiar todo el código del proyecto al contenedor
-COPY . .
+COPY . /code/
 
-# Exponer el puerto estándar que usa Hugging Face Spaces (7860)
-EXPOSE 7860
+# Exponer el puerto por defecto (Render usa el 10000 o el que asigne la variable PORT)
+EXPOSE 10000
 
-# Comando para arrancar la app usando Gunicorn en el puerto correcto
-CMD ["gunicorn", "-b", "0.0.0.0:7860", "app:app.server"]
+# Comando optimizado para arrancar Gunicorn en Render buscando la variable PORT interna
+CMD ["gunicorn", "-b", "0.0.0.0:10000", "app:server"]
