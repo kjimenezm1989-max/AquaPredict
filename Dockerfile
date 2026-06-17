@@ -15,4 +15,4 @@ COPY . /code/
 EXPOSE 10000
 
 # Comando optimizado para arrancar Gunicorn en Render buscando la variable PORT interna
-CMD ["gunicorn", "-b", "0.0.0.0:10000", "app:server"]
+CMD ["gunicorn", "-b", "0.0.0.0:7860", "app:server"]
