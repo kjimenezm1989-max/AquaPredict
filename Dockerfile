@@ -11,8 +11,8 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 # Copiar todo el código del proyecto al contenedor
 COPY . /code/
 
-# Exponer el puerto por defecto (Render usa el 10000 o el que asigne la variable PORT)
-EXPOSE 10000
+# Forzar a que la app escuche en el puerto que Render asigna dinámicamente o por defecto
+EXPOSE 7860
 
-# Comando optimizado para arrancar Gunicorn en Render buscando la variable PORT interna
-CMD ["gunicorn", "-b", "0.0.0.0:7860", "app:server"]
+# Comando directo que evita que Gunicorn falle al parsear el atributo de Dash
+CMD ["gunicorn", "--workers", "1", "--bind", "0.0.0.0:7860", "app:server"]

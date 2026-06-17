@@ -10,7 +10,6 @@ import plotly.express as px
 # 1. CARGA Y SIMULACIÓN DE DATOS (MÉTODOS OPTIMIZADOS)
 # ==========================================
 
-# Datos pestaña: Metodología
 data_agua = pd.DataFrame({
     "Variable": ["BOD (Demanda Bioquímica)", "Nitrógeno Amonio", "Fósforo Total", "pH", "Oxígeno Disuelto"],
     "Datos_Originales %": [75, 80, 70, 98, 85],
@@ -18,7 +17,6 @@ data_agua = pd.DataFrame({
     "Estado_Imputacion": ["Completado", "Completado", "Completado", "Sin Cambios", "Completado"]
 })
 
-# Datos pestaña: EDA
 meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 data_historica = pd.DataFrame({
     "Mes": meses * 3,
@@ -28,7 +26,6 @@ data_historica = pd.DataFrame({
     "Variable": ["pH"] * 12 + ["BOD (Demanda Bioquímica)"] * 12 + ["Nitrógeno Amonio"] * 12
 })
 
-# Datos pestaña: Métricas
 data_metricas = pd.DataFrame({
     "Escenario": ["Antes de Imputar (Drop NaNs)", "Después de IterativeImputer", "Antes de Imputar (Drop NaNs)", "Después de IterativeImputer"],
     "Métrica": ["R² Score (Precisión)", "R² Score (Precisión)", "MAE (Error Medio Absoluto)", "MAE (Error Medio Absoluto)"],
@@ -39,7 +36,6 @@ data_metricas = pd.DataFrame({
 # 2. CONFIGURACIÓN DE LA APP & ESTILOS DASH
 # ==========================================
 
-#  ASÍ DEBE QUEDAR REEMPLAZADO:
 app = dash.Dash(
     __name__, 
     external_stylesheets=[dbc.themes.FLATLY],
@@ -49,23 +45,31 @@ server = app.server
 
 app.title = "H2O Analytics - Control de Calidad del Agua"
 
+# HEADER_STYLE MODIFICADO: Ahora usa un GIF de ondas de agua HD en movimiento continuo
+# Mantiene una capa oscura (rgba) encima para asegurar el contraste de las letras blancas
 HEADER_STYLE = {
-    "backgroundColor": "#1a252f",
-    "color": "#ffffff",
-    "padding": "20px 30px",
+    "backgroundImage": "linear-gradient(rgba(15, 32, 39, 0.7), rgba(44, 62, 80, 0.8)), url('https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3pjd3d0Ymt0YXZ6cm00ZXJ0MTg0Nms0NnpnaXBtNWh2OHh6ZmdvYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VwXcgWQR4e4DK/giphy.gif')",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "color": "#ffffff",                     # Letras color blanco puro obligado
+    "padding": "50px 30px",
     "borderRadius": "0px 0px 15px 15px",
     "marginBottom": "20px",
-    "boxShadow": "0 4px 6px rgba(0,0,0,0.1)"
+    "boxShadow": "0 8px 20px rgba(0,0,0,0.2)",
+    "textAlign": "center",
+    "textShadow": "2px 2px 4px rgba(0, 0, 0, 0.6)" # Sombra en las letras para máxima legibilidad
 }
 
+# Estilo para el distintivo (Badge) integrado armoniosamente
 BADGE_STYLE = {
     "backgroundColor": "#00d2d3",
     "color": "#1a252f",
     "fontWeight": "bold",
     "padding": "8px 15px",
     "borderRadius": "20px",
-    "float": "right",
-    "marginTop": "10px"
+    "display": "inline-block",
+    "marginTop": "15px",
+    "boxShadow": "0 4px 10px rgba(0,0,0,0.3)"
 }
 
 tabs_menu = dbc.Tabs(
@@ -81,7 +85,6 @@ tabs_menu = dbc.Tabs(
     className="nav-pills justify-content-start mb-4",
 )
 
-# Diseño estructural base del Layout global
 app.layout = dbc.Container(
     [
         html.Div(
@@ -89,16 +92,12 @@ app.layout = dbc.Container(
                 [
                     dbc.Col(
                         [
-                            html.H1("H₂O Analytics", className="fw-bold mb-0"),
-                            html.P("Ciencia de Datos al Servicio de la Calidad del Agua", className="text-muted mb-0", style={"color": "#bdc3c7 !important"}),
-                        ],
-                        width=8
-                    ),
-                    dbc.Col(
-                        [
+                            # Forzamos los estilos de texto directamente en las etiquetas
+                            html.H1("H₂O Analytics", className="fw-bold mb-1", style={"color": "#ffffff", "fontSize": "42px"}),
+                            html.P("Ciencia de Datos al Servicio de la Calidad del Agua", className="mb-0", style={"color": "#ffffff", "opacity": "0.95", "fontSize": "16px"}),
                             html.Span("IterativeImputer + ML", style=BADGE_STYLE)
                         ],
-                        width=4
+                        width=12  # Centrado absoluto
                     )
                 ]
             ),
