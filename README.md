@@ -1,96 +1,86 @@
-# 🏢 Employee Attrition Dashboard
+# � H2O Analytics - Control de Calidad del Agua
 
-Dashboard analítico de rotación laboral construido con Dash, Plotly y Scikit-Learn.
-
----
-
-## 🗂️ Estructura del Proyecto
-
-```
-employee_attrition/
-├── app.py                     ← Archivo principal
-├── requirements.txt           ← Dependencias
-├── README.md
-├── data/
-│   ├── __init__.py
-│   └── generate_data.py       ← Genera dataset sintético
-├── model/
-│   ├── __init__.py
-│   ├── train_model.py         ← Entrena y guarda model.pkl
-│   └── model.pkl              ← Generado al ejecutar train_model.py
-└── tabs/
-    ├── __init__.py
-    ├── contextoproblema.py    ← Tab 1: Contexto empresarial
-    ├── metodologia.py         ← Tab 2: Metodología
-    ├── eda.py                 ← Tab 3: Análisis exploratorio
-    ├── metricasmodelo.py      ← Tab 4: Métricas del modelo
-    └── prediccionmodelo.py    ← Tab 5: Predicción interactiva
-```
+Dashboard interactivo de análisis de datos de calidad del agua usando Ciencia de Datos, IterativeImputer y Machine Learning.
 
 ---
 
-## 🚀 Instrucciones de Ejecución
+## 🚀 Ejecutar en GitHub Codespaces (La forma más fácil)
 
-### 1. Requisitos previos
-- Python 3.10 o 3.11 (recomendado)
+### Opción 1: Desde el repositorio
+1. Ve a [github.com/kjimenezm1989-max/AquaPredict](https://github.com/kjimenezm1989-max/AquaPredict)
+2. Click en **Code** (botón verde)
+3. Click en **Codespaces** → **Create codespace on main**
+4. Espera ~2 minutos a que se configure
+5. En la terminal, ejecuta:
+   ```bash
+   python app.py
+   ```
+6. Haz clic en el enlace "Open in Browser"
 
-### 2. Crear entorno virtual
+**¡Listo! Tu app está en línea sin instalar nada localmente.**
+
+---
+
+## 💻 Ejecutar en tu computadora
+
+### Requisitos
+- Python 3.10+
+- Git
+
+### Pasos
 
 ```bash
-# macOS / Linux
-python3.11 -m venv venv
+# 1. Clonar
+git clone https://github.com/kjimenezm1989-max/AquaPredict.git
+cd AquaPredict
+
+# 2. Entorno virtual
+python -m venv venv
+
+# Activar (Windows)
+venv\Scripts\activate
+# Activar (macOS/Linux)
 source venv/bin/activate
 
-# Windows
-python -m venv venv
-venv\Scripts\activate
-```
-
-### 3. Instalar dependencias
-
-```bash
+# 3. Instalar
 pip install -r requirements.txt
-```
 
-### 4. Generar el dataset sintético
-
-```bash
-python data/generate_data.py
-```
-
-### 5. Entrenar el modelo
-
-```bash
-python model/train_model.py
-```
-
-> Esto crea el archivo `model/model.pkl`. **Este paso es obligatorio antes de ejecutar el dashboard.**
-
-### 6. Ejecutar el dashboard
-
-```bash
+# 4. Ejecutar
 python app.py
 ```
 
-Abre tu navegador en: **http://localhost:8050**
+Abre en navegador: **http://localhost:8050**
 
 ---
 
-## 🌐 Despliegue en producción
+## 📊 Características
 
-```bash
-pip install gunicorn
-gunicorn app:server -b 0.0.0.0:8050
+- 📋 **Contexto**: Análisis del problema de calidad del agua
+- 🔬 **Metodología**: Técnicas de imputación de datos (IterativeImputer)
+- 📊 **EDA**: Análisis exploratorio detallado
+- 📈 **Métricas**: Modelos antes y después de imputación
+- 🔮 **Predicción**: Predictor interactivo en tiempo real
+
+---
+
+## 🛠️ Stack
+
+- **Frontend**: Dash + Plotly + Bootstrap
+- **Backend**: Python 3.11
+- **ML**: Scikit-learn
+- **Data**: Pandas, NumPy
+
+---
+
+## 📋 Estructura
+
 ```
-
----
-
-## 📊 Pestañas del Dashboard
-
-| Tab | Contenido |
-|-----|-----------|
-| 📋 Contexto | Impacto empresarial de la rotación laboral |
-| 🔬 Metodología | Dataset, variables y pipeline del modelo |
-| 📊 EDA | Dona, barplot, histogramas, correlación |
-| 📈 Métricas | Accuracy, F1, ROC-AUC, matriz de confusión |
-| 🔮 Predicción | Formulario interactivo con predicción en tiempo real |
+AquaPredict/
+├── app.py
+├── requirements.txt
+├── Procfile
+├── .devcontainer/
+├── data/
+├── model/
+└── tabs/
+```

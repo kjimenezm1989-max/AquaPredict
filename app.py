@@ -254,4 +254,4 @@ def calcular_prediccion_h2o(ph, nitrogeno, oxigeno):
 # 5. EJECUCIÓN DEL SERVIDOR
 # ==========================================
 if __name__ == "__main__":
-    app.run(debug=True, port=8050)
+    app.run_server(debug=True, host='0.0.0.0', port=8050)

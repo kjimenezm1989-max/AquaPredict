@@ -1,0 +1,11 @@
+name: Launch Codespace
+on:
+  workflow_dispatch:
+
+jobs:
+  launch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Codespace
+        uses: github/codespace-action@v1
