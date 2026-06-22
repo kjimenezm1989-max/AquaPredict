@@ -45,30 +45,15 @@ server = app.server
 
 app.title = "H2O Analytics - Control de Calidad del Agua"
 
-# HEADER_STYLE MODIFICADO: Ahora usa un GIF de ondas de agua HD en movimiento continuo
-# Mantiene una capa oscura (rgba) encima para asegurar el contraste de las letras blancas
-HEADER_STYLE = {
-    "backgroundImage": "linear-gradient(rgba(15, 32, 39, 0.7), rgba(44, 62, 80, 0.8)), url('https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3pjd3d0Ymt0YXZ6cm00ZXJ0MTg0Nms0NnpnaXBtNWh2OHh6ZmdvYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VwXcgWQR4e4DK/giphy.gif')",
-    "backgroundSize": "cover",
-    "backgroundPosition": "center",
-    "color": "#ffffff",                     # Letras color blanco puro obligado
-    "padding": "50px 30px",
-    "borderRadius": "0px 0px 15px 15px",
-    "marginBottom": "20px",
-    "boxShadow": "0 8px 20px rgba(0,0,0,0.2)",
-    "textAlign": "center",
-    "textShadow": "2px 2px 4px rgba(0, 0, 0, 0.6)" # Sombra en las letras para máxima legibilidad
-}
-
-# Estilo para el distintivo (Badge) integrado armoniosamente
 BADGE_STYLE = {
     "backgroundColor": "#00d2d3",
     "color": "#1a252f",
     "fontWeight": "bold",
-    "padding": "8px 15px",
+    "padding": "6px 12px",
     "borderRadius": "20px",
     "display": "inline-block",
-    "marginTop": "15px",
+    "marginTop": "8px",
+    "fontSize": "13px",
     "boxShadow": "0 4px 10px rgba(0,0,0,0.3)"
 }
 
@@ -85,29 +70,43 @@ tabs_menu = dbc.Tabs(
     className="nav-pills justify-content-start mb-4",
 )
 
+# Estilo para el contenedor del encabezado (Centrado Absoluto y Minimalista)
+HEADER_CONTAINER_STYLE = {
+    "height": "180px",
+    "backgroundColor": "#0b0e12",  # Fondo negro mate premium
+    "borderRadius": "12px",
+    "marginTop": "15px",
+    "marginBottom": "25px",
+    "boxShadow": "0 4px 15px rgba(0,0,0,0.5)",
+    "display": "flex",
+    "flexDirection": "column",
+    "justifyContent": "center",  # Centrado vertical
+    "alignItems": "center",      # Centrado horizontal
+    "textAlign": "center"        # Alineación del texto
+}
+
 app.layout = dbc.Container(
     [
+        # Encabezado limpio y perfectamente centrado
         html.Div(
-            dbc.Row(
-                [
-                    dbc.Col(
-                        [
-                            # Forzamos los estilos de texto directamente en las etiquetas
-                            html.H1("H₂O Analytics", className="fw-bold mb-1", style={"color": "#ffffff", "fontSize": "42px"}),
-                            html.P("Ciencia de Datos al Servicio de la Calidad del Agua", className="mb-0", style={"color": "#ffffff", "opacity": "0.95", "fontSize": "16px"}),
-                            html.Span("IterativeImputer + ML", style=BADGE_STYLE)
-                        ],
-                        width=12  # Centrado absoluto
-                    )
-                ]
-            ),
-            style=HEADER_STYLE
+            [
+                html.H1("H₂O Analytics", className="fw-bold text-white mb-2", style={"fontSize": "42px", "letterSpacing": "1px"}),
+                html.P("Ciencia de Datos al Servicio de la Calidad del Agua", className="text-white-50 mb-2", style={"fontSize": "16px"}),
+                html.Span("IterativeImputer + ML", style=BADGE_STYLE)
+            ],
+            style=HEADER_CONTAINER_STYLE
         ),
+        
         tabs_menu,
         html.Div(id="contenido-pestañas")
     ],
     fluid=True,
-    style={"backgroundColor": "#f8f9fa", "minHeight": "100vh"}
+    style={
+        "backgroundColor": "#0b0e12",  # Mantiene la consistencia oscura en toda la app
+        "minHeight": "100vh", 
+        "color": "#e6edf3",
+        "paddingBottom": "40px"
+    }
 )
 
 # ==========================================
@@ -121,7 +120,7 @@ app.layout = dbc.Container(
 def render_tab_content(active_tab):
     if active_tab == "tab-contexto":
         return html.Div([
-            html.H2("¿Por qué importa el monitoreo de la calidad del agua?", className="fw-bold mb-4", style={"color": "#2c3e50"}),
+            html.H2("¿Por qué importa el monitoreo de la calidad del agua?", className="fw-bold mb-4", style={"color": "#ffffff"}),
             dbc.Row([
                 dbc.Col(dbc.Card([dbc.CardBody([html.Div("⚠️", style={"fontSize": "30px", "marginBottom": "10px"}), html.H3("25%", className="fw-bold text-white mb-1"), html.P("Datos Faltantes", className="fw-bold text-white mb-1", style={"fontSize": "14px"}), html.P("Registros incompletos en variables críticas.", style={"fontSize": "12px", "opacity": "0.9"})])], style={"backgroundColor": "#ff6b6b", "color": "white", "borderRadius": "15px", "border": "none", "height": "100%"}), md=3, className="mb-3"),
                 dbc.Col(dbc.Card([dbc.CardBody([html.Div("🧪", style={"fontSize": "30px", "marginBottom": "10px"}), html.H3("BOD", className="fw-bold text-white mb-1"), html.P("Demanda Bioquímica", className="fw-bold text-white mb-1", style={"fontSize": "14px"}), html.P("Target principal del análisis de contaminación.", style={"fontSize": "12px", "opacity": "0.9"})])], style={"backgroundColor": "#ff9f43", "color": "white", "borderRadius": "15px", "border": "none", "height": "100%"}), md=3, className="mb-3"),
@@ -129,26 +128,26 @@ def render_tab_content(active_tab):
                 dbc.Col(dbc.Card([dbc.CardBody([html.Div("💧", style={"fontSize": "30px", "marginBottom": "10px"}), html.H3("H₂O", className="fw-bold text-white mb-1"), html.P("Sostenibilidad", className="fw-bold text-white mb-1", style={"fontSize": "14px"}), html.P("Modelado orientado a la estabilidad hídrica.", style={"fontSize": "12px", "opacity": "0.9"})])], style={"backgroundColor": "#a55eea", "color": "white", "borderRadius": "15px", "border": "none", "height": "100%"}), md=3, className="mb-3"),
             ], className="mb-4"),
             dbc.Row([
-                dbc.Col(html.Div([html.H5("🌱 Impacto Ambiental y Operativo", className="fw-bold mb-3", style={"color": "#2c3e50"}), html.P("La falta de continuidad en las mediciones de parámetros hídricos como el BOD o el Nitrógeno Amonio impide que las plantas de tratamiento y las entidades de control tomen decisiones proactivas. Esto puede derivar en sanciones legales, daños ecológicos severos e ineficiencia en la dosificación de químicos.", style={"fontSize": "14px", "color": "#57606f"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.05)", "height": "100%"}), md=6, className="mb-3"),
-                dbc.Col(html.Div([html.H5("🎯 ¿Qué resuelve este Dashboard?", className="fw-bold mb-3", style={"color": "#2c3e50"}), html.P("Este sistema transforma datos crudos e incompletos en una herramienta de analítica avanzada. A través de técnicas de Imputación Multivariada y modelos de Machine Learning, el dashboard permite visualizar tendencias históricas limpias y predecir niveles de contaminación antes de que afecten la calidad del recurso hídrico.", style={"fontSize": "14px", "color": "#57606f"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.05)", "height": "100%"}), md=6, className="mb-3"),
+                dbc.Col(html.Div([html.H5("🌱 Impacto Ambiental y Operativo", className="fw-bold mb-3", style={"color": "#1a252f"}), html.P("La falta de continuidad en las mediciones de parámetros hídricos como el BOD o el Nitrógeno Amonio impide que las plantas de tratamiento y las entidades de control tomen decisiones proactivas. Esto puede derivar en sanciones legales, daños ecológicos severos e ineficiencia en la dosificación de químicos.", style={"fontSize": "14px", "color": "#57606f"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)", "height": "100%"}), md=6, className="mb-3"),
+                dbc.Col(html.Div([html.H5("🎯 ¿Qué resuelve este Dashboard?", className="fw-bold mb-3", style={"color": "#1a252f"}), html.P("Este sistema transforma datos crudos e incompletos en una herramienta de analítica avanzada. A través de técnicas de Imputación Multivariada y modelos de Machine Learning, el dashboard permite visualizar tendencias históricas limpias y predecir niveles de contaminación antes de que afecten la calidad del recurso hídrico.", style={"fontSize": "14px", "color": "#57606f"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)", "height": "100%"}), md=6, className="mb-3"),
             ])
         ], className="p-2")
         
     elif active_tab == "tab-metodologia":
         return html.Div([
-            html.H2("Metodología del Proyecto", className="fw-bold mb-4", style={"color": "#2c3e50"}),
+            html.H2("Metodología del Proyecto", className="fw-bold mb-4", style={"color": "#ffffff"}),
             dbc.Row([
-                dbc.Col(html.Div([html.H5("🔄 Pipeline de Datos (H₂O Workflow)", className="fw-bold mb-4"), html.Div([html.H6("1. Ingesta & Análisis Exploratorio (EDA)", className="fw-bold text-primary"), html.P("Evaluación del dataset original. Identificación de un volumen crítico de datos faltantes concentrados en las variables químicas principales.", style={"fontSize": "13px"})], className="border-left pl-3 mb-3", style={"borderLeft": "3px solid #007bff"}), html.Div([html.H6("2. Tratamiento con IterativeImputer", className="fw-bold text-warning"), html.P("Uso de imputación multivariada por cadenas de ecuaciones (MICE). Estima los valores nulos modelando cada característica en función de las demás.", style={"fontSize": "13px"})], className="border-left pl-3 mb-3", style={"borderLeft": "3px solid #ff9f43"}), html.Div([html.H6("3. Modelado Predictivo (Machine Learning)", className="fw-bold text-success"), html.P("Entrenamiento de algoritmos de regresión utilizando el dataset balanceado y limpio para estimar los niveles futuros de BOD.", style={"fontSize": "13px"})], className="border-left pl-3", style={"borderLeft": "3px solid #28a745"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.05)", "height": "100%"}), md=5, className="mb-3"),
-                dbc.Col(html.Div([html.H5("📋 Estado de Calidad de las Variables", className="fw-bold mb-3"), html.P("Resumen del estado del dataset antes y después de aplicar las técnicas de imputación:", style={"fontSize": "13px", "color": "#6c757d"}), dbc.Table.from_dataframe(data_agua, striped=True, bordered=True, hover=True, className="align-middle text-center", style={"fontSize": "13px"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.05)", "height": "100%"}), md=7, className="mb-3"),
+                dbc.Col(html.Div([html.H5("🔄 Pipeline de Datos (H₂O Workflow)", className="fw-bold mb-4", style={"color": "#1a252f"}), html.Div([html.H6("1. Ingesta & Análisis Exploratorio (EDA)", className="fw-bold text-primary"), html.P("Evaluación del dataset original. Identificación de un volumen crítico de datos faltantes.", style={"fontSize": "13px", "color": "#57606f"})], className="border-left pl-3 mb-3", style={"borderLeft": "3px solid #007bff"}), html.Div([html.H6("2. Tratamiento con IterativeImputer", className="fw-bold text-warning"), html.P("Uso de imputación multivariada por cadenas de ecuaciones (MICE).", style={"fontSize": "13px", "color": "#57606f"})], className="border-left pl-3 mb-3", style={"borderLeft": "3px solid #ff9f43"}), html.Div([html.H6("3. Modelado Predictivo (Machine Learning)", className="fw-bold text-success"), html.P("Entrenamiento de algoritmos de regresión.", style={"fontSize": "13px", "color": "#57606f"})], className="border-left pl-3", style={"borderLeft": "3px solid #28a745"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)", "height": "100%"}), md=5, className="mb-3"),
+                dbc.Col(html.Div([html.H5("📋 Estado de Calidad de las Variables", className="fw-bold mb-3", style={"color": "#1a252f"}), html.P("Resumen del estado del dataset antes y después de aplicar las técnicas de imputación:", style={"fontSize": "13px", "color": "#6c757d"}), dbc.Table.from_dataframe(data_agua, striped=True, bordered=True, hover=True, className="align-middle text-center", style={"fontSize": "13px", "backgroundColor": "white"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)", "height": "100%"}), md=7, className="mb-3"),
             ])
         ], className="p-2")
         
     elif active_tab == "tab-eda":
         return html.Div([
-            html.H2("Análisis Exploratorio de Datos (EDA)", className="fw-bold mb-4", style={"color": "#2c3e50"}),
+            html.H2("Análisis Exploratorio de Datos (EDA)", className="fw-bold mb-4", style={"color": "#ffffff"}),
             dbc.Row([
-                dbc.Col(html.Div([html.H5("📊 Parámetros de Control", className="fw-bold mb-3"), html.Label("Seleccione la variable a visualizar:", className="text-muted fw-bold", style={"fontSize": "13px"}), dcc.Dropdown(id="dropdown-variable-eda", options=[{"label": var, "value": var} for var in data_historica["Variable"].unique()], value="BOD (Demanda Bioquímica)", clearable=False, style={"borderRadius": "8px", "fontSize": "14px"}), html.Hr(), html.P(["💡 ", html.Strong("Observación del EDA:"), " Al alternar entre las variables químicas, notarás las fluctuaciones estacionales. El comportamiento del ", html.Strong("BOD"), " muestra una correlación indirecta con los niveles extremos de pH, un patrón clave identificado en las matrices de covarianza del proyecto original."], style={"fontSize": "13px", "color": "#57606f", "backgroundColor": "#f1f2f6", "padding": "15px", "borderRadius": "10px"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.05)", "height": "100%"}), md=4, className="mb-3"),
-                dbc.Col(html.Div([html.H5("📈 Comportamiento de Tendencia Temporal", className="fw-bold mb-2"), dcc.Graph(id="grafico-dinamico-eda")], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.05)", "height": "100%"}), md=8, className="mb-3"),
+                dbc.Col(html.Div([html.H5("📊 Parámetros de Control", className="fw-bold mb-3", style={"color": "#1a252f"}), html.Label("Seleccione la variable a visualizar:", className="text-muted fw-bold", style={"fontSize": "13px"}), dcc.Dropdown(id="dropdown-variable-eda", options=[{"label": var, "value": var} for var in data_historica["Variable"].unique()], value="BOD (Demanda Bioquímica)", clearable=False, style={"borderRadius": "8px", "fontSize": "14px", "color": "#000"}), html.Hr(), html.P(["💡 ", html.Strong("Observación del EDA:"), " El comportamiento del ", html.Strong("BOD"), " muestra una correlación indirecta con los niveles extremos de pH."], style={"fontSize": "13px", "color": "#57606f", "backgroundColor": "#f1f2f6", "padding": "15px", "borderRadius": "10px"})], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)", "height": "100%"}), md=4, className="mb-3"),
+                dbc.Col(html.Div([html.H5("📈 Comportamiento de Tendencia Temporal", className="fw-bold mb-2", style={"color": "#1a252f"}), dcc.Graph(id="grafico-dinamico-eda")], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)", "height": "100%"}), md=8, className="mb-3"),
             ])
         ], className="p-2")
 
@@ -158,39 +157,39 @@ def render_tab_content(active_tab):
         fig_metricas.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", showlegend=False, margin={"l": 40, "r": 20, "t": 20, "b": 40}, yaxis={"title": "Coeficiente de Determinación (R²)", "gridcolor": "#f1f2f6"})
         
         return html.Div([
-            html.H2("Métricas de Rendimiento del Modelo", className="fw-bold mb-4", style={"color": "#2c3e50"}),
+            html.H2("Métricas de Rendimiento del Modelo", className="fw-bold mb-4", style={"color": "#ffffff"}),
             dbc.Row([
                 dbc.Col([
-                    html.Div([html.H6("📈 R² SCORE LOGRADO", className="text-muted fw-bold mb-1", style={"fontSize": "12px"}), html.H2("0.86", className="fw-bold text-success mb-2"), html.P("El modelo explica el 86% de la variabilidad del BOD tras balancear y rellenar nulos con MICE.", style={"fontSize": "13px", "color": "#57606f"})], style={"backgroundColor": "white", "padding": "20px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.02)", "marginBottom": "15px"}),
-                    html.Div([html.H6("📉 ERROR MEDIO ABSOLUTO (MAE)", className="text-muted fw-bold mb-1", style={"fontSize": "12px"}), html.H2("2.1 mg/L", className="fw-bold text-info mb-2"), html.P("Reducción drástica del error de predicción en comparación al modelo entrenado omitiendo nulos (MAE: 5.4).", style={"fontSize": "13px", "color": "#57606f"})], style={"backgroundColor": "white", "padding": "20px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.02)"})
+                    html.Div([html.H6("📈 R² SCORE LOGRADO", className="text-muted fw-bold mb-1", style={"fontSize": "12px"}), html.H2("0.86", className="fw-bold text-success mb-2"), html.P("El modelo explica el 86% de la variabilidad del BOD tras balancear y rellenar nulos con MICE.", style={"fontSize": "13px", "color": "#57606f"})], style={"backgroundColor": "white", "padding": "20px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)", "marginBottom": "15px"}),
+                    html.Div([html.H6("📉 ERROR MEDIO ABSOLUTO (MAE)", className="text-muted fw-bold mb-1", style={"fontSize": "12px"}), html.H2("2.1 mg/L", className="fw-bold text-info mb-2"), html.P("Reducción drástica del error de predicción en comparación al modelo entrenado omitiendo nulos.", style={"fontSize": "13px", "color": "#57606f"})], style={"backgroundColor": "white", "padding": "20px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)"})
                 ], md=4, className="mb-3"),
-                dbc.Col(html.Div([html.H5("📊 Impacto de la Imputación en la Precisión del Modelo", className="fw-bold mb-3"), dcc.Graph(figure=fig_metricas)], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.05)"}), md=8, className="mb-3")
+                dbc.Col(html.Div([html.H5("📊 Impacto de la Imputación en la Precisión del Modelo", className="fw-bold mb-3", style={"color": "#1a252f"}), dcc.Graph(figure=fig_metricas)], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)"}), md=8, className="mb-3")
             ])
         ], className="p-2")
 
     elif active_tab == "tab-prediccion":
         return html.Div([
-            html.H2("Módulo de Predicción en Tiempo Real", className="fw-bold mb-4", style={"color": "#2c3e50"}),
+            html.H2("Módulo de Predicción en Tiempo Real", className="fw-bold mb-4", style={"color": "#ffffff"}),
             dbc.Row([
                 dbc.Col(html.Div([
-                    html.H5("🎛️ Variables de Entrada", className="fw-bold mb-3"),
+                    html.H5("🎛️ Variables de Entrada", className="fw-bold mb-3", style={"color": "#1a252f"}),
                     html.P("Ajuste los valores medidos en campo para calcular la demanda biológica proyectada:", style={"fontSize": "13px", "color": "#6c757d"}),
-                    html.Label("Nivel de pH:", className="fw-bold mb-1", style={"fontSize": "13px"}),
+                    html.Label("Nivel de pH:", className="fw-bold mb-1", style={"fontSize": "13px", "color": "#000"}),
                     dbc.Input(id="input-ph", type="number", value=7.4, min=0, max=14, step=0.1, className="mb-3", style={"borderRadius": "8px"}),
-                    html.Label("Nitrógeno Amonio (mg/L):", className="fw-bold mb-1", style={"fontSize": "13px"}),
+                    html.Label("Nitrógeno Amonio (mg/L):", className="fw-bold mb-1", style={"fontSize": "13px", "color": "#000"}),
                     dbc.Input(id="input-nitrogeno", type="number", value=2.5, min=0, step=0.1, className="mb-3", style={"borderRadius": "8px"}),
-                    html.Label("Oxígeno Disuelto (mg/L):", className="fw-bold mb-1", style={"fontSize": "13px"}),
+                    html.Label("Oxígeno Disuelto (mg/L):", className="fw-bold mb-1", style={"fontSize": "13px", "color": "#000"}),
                     dbc.Input(id="input-oxigeno", type="number", value=5.0, min=0, step=0.1, className="mb-2", style={"borderRadius": "8px"}),
-                ], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.05)"}), md=5, className="mb-3"),
+                ], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)"}), md=5, className="mb-3"),
                 dbc.Col(html.Div([
-                    html.H5("🔮 Estimación Proyectada del Target", className="fw-bold mb-4"),
+                    html.H5("🔮 Estimación Proyectada del Target", className="fw-bold mb-4", style={"color": "#1a252f"}),
                     html.Div([
                         html.H6("BOD (DEMANDA BIOQUÍMICA DE OXÍGENO) CALCULADA:", className="text-muted fw-bold mb-2", style={"fontSize": "12px", "letterSpacing": "1px"}),
                         html.Div(id="resultado-prediccion-bod", className="fw-bold mb-2", style={"fontSize": "56px"}),
                         html.Div(id="status-badge-bod")
                     ], style={"padding": "40px 30px", "borderRadius": "15px", "textAlign": "center", "backgroundColor": "#f8f9fa", "border": "1px solid #e9ecef"}),
                     html.P(["⚠️ ", html.Strong("Nota de Ingeniería:"), " Un valor de BOD superior a 50 mg/L se considera un indicador de alta carga orgánica residual."], className="text-muted mt-3", style={"fontSize": "12px"})
-                ], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.05)", "height": "100%"}), md=7, className="mb-3")
+                ], style={"backgroundColor": "white", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)", "height": "100%"}), md=7, className="mb-3")
             ])
         ], className="p-2")
     else:
