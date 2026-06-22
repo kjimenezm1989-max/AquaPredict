@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+   
+    <style>
+        body {
+            background-color: #0b0e12;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .header-waves-container {
+            position: relative; 
+            width: 800px;
+            height: 180px; 
+            background: #111418; 
+            overflow: hidden; 
+            border-radius: 12px; 
+            border: 1px solid #30363d; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .wave-shape {
+            position: absolute; 
+            width: 1500px; 
+            height: 1500px; 
+            background: rgba(0, 163, 224, 0.08); 
+            bottom: -1360px; 
+            left: 50%; 
+            margin-left: -750px; 
+            border-radius: 43%; 
+            animation: drift 12s infinite linear;
+            z-index: 1;
+        }
+        .wave-shape.-two { 
+            background: rgba(0, 163, 224, 0.12); 
+            animation: drift 16s infinite linear; 
+            border-radius: 40%; 
+            z-index: 2; 
+        }
+        .wave-shape.-three { 
+            background: rgba(0, 163, 224, 0.05); 
+            animation: drift 20s infinite linear; 
+            border-radius: 45%; 
+            z-index: 3; 
+        }
+        @keyframes drift {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .header-content { 
+            position: relative; 
+            z-index: 10; 
+            text-align: center; 
+        }
+        h1 {
+            color: #ffffff;
+            margin: 0 0 5px 0;
+            font-size: 38px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+        p {
+            color: #ffffff;
+            opacity: 0.9;
+            margin: 0;
+            font-size: 15px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-waves-container">
+        <div class="wave-shape"></div>
+        <div class="wave-shape -two"></div>
+        <div class="wave-shape -three"></div>
+        <div class="header-content">
+            
+        </div>
+    </div>
+
+</body>
+</html>
