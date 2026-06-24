@@ -93,28 +93,44 @@ app.layout = dbc.Container([
 def render_tab_content(active_tab):
     if active_tab == "tab-contexto":
         return html.Div([
-            html.H2("¿Por qué importa el monitoreo de la calidad del agua?", className="fw-bold mb-4", style={"color": "#ffffff"}),
+            html.H2("Diagnóstico del Proyecto: Calidad Hídrica Industrial", className="fw-bold mb-4", style={"color": "#ffffff"}),
+            html.P("Este proyecto aborda la problemática de la medición in-situ de la Demanda Bioquímica de Oxígeno (BOD). Los métodos de laboratorio tradicionales requieren hasta 5 días para generar resultados, lo que impide una gestión reactiva ante picos de contaminación.", className="text-secondary mb-4"),
+            
             dbc.Row([
-                dbc.Col(dbc.Card([dbc.CardBody([html.I(className="fas fa-exclamation-triangle fa-2x mb-3"), html.H3("25%", className="fw-bold text-white mb-1"), html.P("Datos Faltantes", style={"fontSize": "14px"})])], style={"backgroundColor": "#161b22", "color": "white", "borderRadius": "15px", "border": "1px solid #30363d", "height": "100%"}), md=3),
-                dbc.Col(dbc.Card([dbc.CardBody([html.I(className="fas fa-vial fa-2x mb-3"), html.H3("BOD", className="fw-bold text-white mb-1"), html.P("Target Principal", style={"fontSize": "14px"})])], style={"backgroundColor": "#161b22", "color": "white", "borderRadius": "15px", "border": "1px solid #30363d", "height": "100%"}), md=3),
-                dbc.Col(dbc.Card([dbc.CardBody([html.I(className="fas fa-microchip fa-2x mb-3"), html.H3("Imputer", className="fw-bold text-white mb-1"), html.P("MICE / Iterative", style={"fontSize": "14px"})])], style={"backgroundColor": "#161b22", "color": "white", "borderRadius": "15px", "border": "1px solid #30363d", "height": "100%"}), md=3),
-                dbc.Col(dbc.Card([dbc.CardBody([html.I(className="fas fa-tint fa-2x mb-3"), html.H3("H₂O", className="fw-bold text-white mb-1"), html.P("Sostenibilidad", style={"fontSize": "14px"})])], style={"backgroundColor": "#161b22", "color": "white", "borderRadius": "15px", "border": "1px solid #30363d", "height": "100%"}), md=3),
+                dbc.Col(dbc.Card([dbc.CardBody([html.I(className="fas fa-microchip fa-2x mb-3 text-info"), html.H4("Modelo de Inferencia"), html.P("Sustitución de ensayos físicos por modelos predictivos XGBoost.")])], style={"backgroundColor": "#161b22", "border": "1px solid #30363d", "color": "white"}), md=4),
+                dbc.Col(dbc.Card([dbc.CardBody([html.I(className="fas fa-database fa-2x mb-3 text-warning"), html.H4("Integridad de Datos"), html.P("Uso de MICE para imputar valores faltantes sin perder varianza.")])], style={"backgroundColor": "#161b22", "border": "1px solid #30363d", "color": "white"}), md=4),
+                dbc.Col(dbc.Card([dbc.CardBody([html.I(className="fas fa-shield-alt fa-2x mb-3 text-success"), html.H4("Impacto Operativo"), html.P("Reducción de tiempos de decisión de 120 horas a tiempo real.")])], style={"backgroundColor": "#161b22", "border": "1px solid #30363d", "color": "white"}), md=4),
             ], className="mb-4"),
-            dbc.Row([
-                dbc.Col(html.Div([html.H5("🌱 Impacto Ambiental"), html.P("La falta de datos impide decisiones proactivas. XGBoost permite predecir el BOD sin esperar 5 días de laboratorio, un salto de eficiencia crítico para la gestión de recursos hídricos.")], className="p-4 border border-secondary rounded"), md=6),
-                dbc.Col(html.Div([html.H5("🎯 ¿Qué resuelve este Dashboard?"), html.P("Este sistema implementa un pipeline de preprocesamiento (MICE) y un modelo XGBoost para inferir la calidad del agua en tiempo real.")], className="p-4 border border-secondary rounded"), md=6),
-            ])
+            
+            html.Div([
+                html.H5("🌱 El Problema de Negocio", className="text-white"),
+                html.P("El dataset (train/test) presenta variables altamente correlacionadas (pH, OD, Conductividad) con un 25% de datos faltantes. La metodología implementada permite que, ante la ausencia de un sensor específico, el sistema pueda estimar el estado de la cuenca con alta confianza estadística.")
+            ], className="p-4 border border-secondary rounded mt-3")
         ])
     
     elif active_tab == "tab-metodologia":
         return html.Div([
-            html.H2("Metodología: Pipeline MICE + XGBoost", className="fw-bold mb-4", style={"color": "#ffffff"}),
+            html.H2("Metodología: Validación y Selección de Modelo", className="fw-bold mb-4", style={"color": "#ffffff"}),
             dbc.Row([
                 dbc.Col(html.Div([
-                    html.P("1. **IterativeImputer (MICE)**: Se seleccionó este método porque las variables fisico-químicas del agua están altamente correlacionadas. MICE permite estimar cada variable faltante usando las demás, manteniendo la estructura de varianza que una media simple destruiría."),
-                    html.P("2. **XGBoost**: Se eligió este algoritmo (Gradient Boosting) porque supera la regresión lineal tradicional al capturar relaciones no lineales complejas entre el pH, conductividad y el BOD.")
-                ], className="p-4 border border-secondary rounded"), md=5),
-                dbc.Col(dash_table.DataTable(data=data_agua.to_dict('records'), style_cell={'backgroundColor': '#161b22', 'color': 'white'}, style_header={'backgroundColor': '#000', 'color': '#00d2d3'}), md=7)
+                    html.H5("🧪 Pruebas Realizadas", className="text-info"),
+                    html.Ul([
+                        html.Li("Regresión Lineal Simple: Establecida como baseline para medir la mejora base."),
+                        html.Li("Regresión Lasso/Ridge: Aplicadas para penalizar coeficientes y evitar sobreajuste (overfitting)."),
+                        html.Li("XGBoost (Modelo Final): Prueba de ensamble mediante Gradient Boosting."),
+                    ], className="text-white"),
+                    html.H5("¿Por qué XGBoost fue el ganador?", className="text-info mt-3"),
+                    html.P("XGBoost superó a los modelos lineales al capturar dependencias no lineales entre el BOD y las variables físico-químicas. Mientras que la Regresión Lineal obtuvo un R² de 0.68, el modelo XGBoost alcanzó 0.86, demostrando que la contaminación orgánica en esta cuenca no tiene una relación constante, sino dependiente de umbrales críticos de pH y OD.", className="text-white")
+                ], className="p-4 border border-secondary rounded", style={"backgroundColor": "#161b22"}), md=6),
+                
+                dbc.Col(html.Div([
+                    html.H5("📋 Estado de Calidad de las Variables", className="text-info mb-3"),
+                    dash_table.DataTable(
+                        data=data_agua.to_dict('records'), 
+                        style_cell={'backgroundColor': '#161b22', 'color': 'white', 'textAlign': 'center'},
+                        style_header={'backgroundColor': '#0b0e12', 'color': '#00d2d3', 'fontWeight': 'bold'}
+                    )
+                ], className="p-4 border border-secondary rounded", style={"backgroundColor": "#161b22"}), md=6)
             ])
         ])
 
