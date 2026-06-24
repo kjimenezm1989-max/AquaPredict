@@ -145,7 +145,36 @@ def render_tab_content(active_tab):
         return html.Div([dcc.Graph(figure=fig), html.P("El R² de 0.86 valida que el modelo explica la mayor parte de la contaminación orgánica.", className="text-white")])
 
     elif active_tab == "tab-prediccion":
-        return html.Div([dbc.Input(id="ph-in", type="number", placeholder="pH"), html.Div(id="out-bod", className="h2 text-info")])
+        return html.Div([
+            html.H2("Módulo de Predicción en Tiempo Real", className="fw-bold mb-4", style={"color": "#f5f4f2"}),
+            dbc.Row([
+                dbc.Col(html.Div([
+                    html.H5("🎛️ Variables de Entrada", className="fw-bold mb-3", style={"color": "#f5f4f2"}),
+                    html.P("Ajuste los valores medidos en campo para calcular la demanda biológica proyectada:", style={"fontSize": "13px", "color": "#f5f4f2"}),
+                    html.Label("Nivel de pH:", className="fw-bold mb-1", style={"fontSize": "13px", "color": "#f5f4f2"}),
+                    dbc.Input(id="input-ph", type="number", value=7.4, min=0, max=14, step=0.1, className="mb-3", style={"borderRadius": "8px"}),
+                    html.Label("Nitrógeno Amonio (mg/L):", className="fw-bold mb-1", style={"fontSize": "13px", "color": "#f5f4f2"}),
+                    dbc.Input(id="input-nitrogeno", type="number", value=2.5, min=0, step=0.1, className="mb-3", style={"borderRadius": "8px"}),
+                    html.Label("Oxígeno Disuelto (mg/L):", className="fw-bold mb-1", style={"fontSize": "13px", "color": "#f5f4f2"}),                    
+                    dbc.Input(id="input-oxigeno", type="number", value=5.0, min=0, step=0.1, className="mb-2", style={"borderRadius": "8px"}),
+                    html.Label("Fósforo Total (mg/L):", className="fw-bold mb-1", style={"fontSize": "13px", "color": "#f5f4f2"}),
+                    dbc.Input(id="input-fosforo", type="number", value=0.5, min=0, step=0.1, className="mb-3", style={"borderRadius": "8px"}),
+                ], style={"backgroundColor": "black", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)"}), md=5, className="mb-3"),
+                dbc.Col(html.Div([
+                    html.H5("🔮 Estimación Proyectada del Target", className="fw-bold mb-4", style={"color": "#f5f4f2"}),
+                    html.Div([
+                        html.H6("BOD (DEMANDA BIOQUÍMICA DE OXÍGENO) CALCULADA:", className="text-muted fw-bold mb-2", style={"fontSize": "12px", "letterSpacing": "1px"}),
+                        html.Div(id="resultado-prediccion-bod", className="fw-bold mb-2", style={"fontSize": "56px", "letterSpacing": "1px"}),
+                        html.Div(id="status-badge-bod")
+                    ], style={"padding": "40px 30px", "borderRadius": "15px", "textAlign": "center", "backgroundColor": "#f5f4f2", "border": "1px solid #e9ecef"}),
+                    html.P(
+                        ["⚠️ ", html.Strong("Nota de Ingeniería:"), " Un valor de BOD superior a 50 mg/L se considera un indicador de alta carga orgánica residual."], 
+                        className="mt-3", # Quitamos la clase text-muted
+                        style={"fontSize": "12px", "color": "#f5f4f2"} # Tu color original ahora sí funcionará
+                    )
+                ], style={"backgroundColor": "black", "padding": "25px", "borderRadius": "15px", "boxShadow": "0 4px 6px rgba(0,0,0,0.15)", "height": "100%"}), md=7, className="mb-3")
+            ])
+        ], className="p-2")
 
 # ==========================================
 # 4. CALLBACKS
@@ -158,6 +187,36 @@ def update_eda(var):
 @app.callback(Output("out-bod", "children"), [Input("ph-in", "value")])
 def predict(ph):
     return f"Predicción: {round(ph * 5.2, 2)} mg/L" if ph else "Esperando entrada..."
+
+@app.callback(
+    [Output("resultado-prediccion-bod", "children"),
+     Output("resultado-prediccion-bod", "style"),
+     Output("status-badge-bod", "children")],
+    [Input("input-ph", "value"),
+     Input("input-nitrogeno", "value"),     
+     Input("input-oxigeno", "value"),
+     Input("input-fosforo", "value")]
+)
+
+def calcular_prediccion_h2o(ph, nitrogeno, oxigeno, fosforo):
+    if ph is None or nitrogeno is None or oxigeno is None or fosforo is None:
+        return "---", {"color": "#f5f4f2"}, dbc.Badge("Esperando datos", color="secondary")
+    
+    bod_estimado = (nitrogeno * 15.4) + (ph * 3.2) - (oxigeno * 1.5) - (fosforo * 8.7) + 12.3
+    bod_estimado = max(0, round(bod_estimado, 2))
+    
+    if bod_estimado < 40:
+        color_texto = "#2ecc71"
+        badge = dbc.Badge("Calidad Estable (Baja Carga Orgánica)", color="success", style={"padding": "8px 12px", "borderRadius": "10px"})
+    elif 40 <= bod_estimado <= 60:
+        color_texto = "#f39c12"
+        badge = dbc.Badge("Alerta: Carga Orgánica Moderada", color="warning", style={"padding": "8px 12px", "borderRadius": "10px", "color": "white"})
+    else:
+        color_texto = "#e74c3c"
+        badge = dbc.Badge("CRÍTICO: Alta Contaminación Detectada", color="danger", style={"padding": "8px 12px", "borderRadius": "10px"})
+        
+    return f"{bod_estimado} mg/L", {"color": color_texto, "fontSize": "56px"}, badge
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8050)
